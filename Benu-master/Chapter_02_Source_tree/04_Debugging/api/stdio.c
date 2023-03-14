@@ -43,3 +43,18 @@ void warn(char *format, ...)
 
 	u_stderr->print(text);
 }
+
+int PRINTF(char *text)
+{
+	char ret_text[CONSOLE_MAXLEN];
+
+    vssprintf(ret_text, CONSOLE_MAXLEN, &text);
+
+    for(int i = 0; i < len(ret_text); i++){
+		if('a' <= text[i] && text[i] <= 'z'){
+			text[i] -= ('a'-'A');
+		}
+	}
+
+    return u_stdout->print(text);
+}
