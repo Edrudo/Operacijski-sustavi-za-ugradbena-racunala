@@ -7,7 +7,7 @@ void printE(const char *text)
 	char p[DULJINA];
 
 	strcpy ( p, text );
-	strcat ( p, " --printE" );
-	printf("%s\n", p);
+	strcat ( p, "/ed" );
+	printf("%s --printE\n", p);
 	return;
 }
