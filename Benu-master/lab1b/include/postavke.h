@@ -7,3 +7,4 @@ void printEduard(const char *text);
 void printEdo(const char *text);
 void printEd(const char *text);
 void printE(const char *text);
+void lab1y();

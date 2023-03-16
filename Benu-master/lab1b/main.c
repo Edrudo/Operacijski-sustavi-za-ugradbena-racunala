@@ -7,5 +7,7 @@ int main ()
 
 	printEduard(DIR);
 
+	lab1y();
+
 	return 0;
 }
