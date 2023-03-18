@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "postavke.h": "c",
+        "stdlib.h": "c",
+        "time.h": "c"
+    }
+}
