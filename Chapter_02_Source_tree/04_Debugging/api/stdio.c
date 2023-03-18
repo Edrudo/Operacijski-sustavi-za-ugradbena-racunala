@@ -50,7 +50,7 @@ int PRINTF(char *text)
 
     vssprintf(ret_text, CONSOLE_MAXLEN, &text);
 
-    for(int i = 0; i < len(ret_text); i++){
+    for(int i = 0; i < CONSOLE_MAXLEN; i++){
 		if('a' <= text[i] && text[i] <= 'z'){
 			text[i] -= ('a'-'A');
 		}
