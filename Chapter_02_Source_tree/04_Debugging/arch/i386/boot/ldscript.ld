@@ -18,7 +18,7 @@ SECTIONS {
 
 		*( .text* )
 	}
-	size_instrukcije = SIZEOF(.instrukcije);
+	size_i = SIZEOF(.instrukcije);
 
 	.data 0x300000 : AT(0x30000)
 	{
