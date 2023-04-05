@@ -36,7 +36,7 @@ SECTIONS {
 		. = ALIGN (4096);
 	}
 
-	.stog 0x700000: AT(0x70000)
+	.stog 0x600000: AT(0x60000)
 	{
 		*( .stog )
 		. = ALIGN (4096);
