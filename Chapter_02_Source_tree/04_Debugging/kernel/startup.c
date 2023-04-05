@@ -8,7 +8,7 @@
 #include <kernel/errno.h>
 
 /*! kernel stack */
-uint8 system_stack [ STACK_SIZE ];
+uint8 system_stack [ STACK_SIZE ]
 __attribute__((section(".stog")));
 
 char system_info[] = 	OS_NAME ": " NAME_MAJOR ":" NAME_MINOR ", "
