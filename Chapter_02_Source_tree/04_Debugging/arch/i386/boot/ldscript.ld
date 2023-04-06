@@ -27,7 +27,7 @@ SECTIONS {
 	}
 	size_d = SIZEOF(.data);
 
-	.bss 0x400000: AT(0x100000 + size_c + size_i + size_d)
+	.bss 0x410000: AT(0x100000 + size_c + size_i + size_d)
 	{
 		*( .bss* COMMON* .data* );
 
