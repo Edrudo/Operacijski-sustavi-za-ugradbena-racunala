@@ -1,7 +1,7 @@
 ENTRY(arch_startup)
 
 SECTIONS {
-	.code 0x0: AT(0x100000):
+	.code 0x0: AT(0x100000)
 	{
 		kernel_code_addr = .;
 
