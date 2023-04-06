@@ -41,11 +41,11 @@ SECTIONS {
 
 	.stog 0x600000: AT(0x100000 + size_c + size_i + size_d + size_b)
 	{
-		*( .stog )
-		. = ALIGN (4096);
 		stack_start = .; /* set a symbol to the start of the stack */
-		. += 0x200000;   /* allocate 2 MB for the stack */
-		stack_end = .;   /* set a symbol to the end of the stack */
+        . += 0x200000;   /* allocate 2 MB for the stack */
+        stack_end = .;   /* set a symbol to the end of the stack */
+        *( .stog )
+        . = ALIGN (4096);
 	}
 
 	/*
