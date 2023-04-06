@@ -72,8 +72,11 @@ void *ffs_alloc(ffs_mpool_t *mpool, size_t size)
 	ALIGN_FW(size);
 
 	iter = mpool->first;
-	while (iter != NULL && iter->size < size)
-		iter = iter->next;
+	while (iter != NULL && iter->size < size){
+		while(iter->size < size && CHECK_FREE(iter->prev)){
+			
+		}
+	}
 
 	if (iter == NULL)
 		return NULL; /* no adequate free chunk found */
@@ -118,10 +121,24 @@ int ffs_free(ffs_mpool_t *mpool, void *chunk_to_be_freed)
 
 	MARK_FREE(chunk); /* mark it as free */
 
+	int num_free_chunks = 0;
+	ffs_hdr_t *chunk_tmp = mpool->first;
+	do{
+		num_free_chunks += 1;
+		chunk_tmp = chunk_tmp->next;
+	}while(chunk_tmp->next != NULL);
+
+	if(num_free_chunks < 6){
+		printf("Manje od 6 blokova, nema spajanja");
+		ffs_insert_chunk(mpool, chunk);
+		return 0;
+	}
+
 	/* join with left? */
 	before = ((void *) chunk) - sizeof(size_t);
 	if (CHECK_FREE(before))
 	{
+		printf("Vise od 5 blokova, spajanje s lijevim");
 		before = GET_HDR(before);
 		ffs_remove_chunk(mpool, before);
 		before->size += chunk->size; /* join */
@@ -132,6 +149,7 @@ int ffs_free(ffs_mpool_t *mpool, void *chunk_to_be_freed)
 	after = GET_AFTER(chunk);
 	if (CHECK_FREE(after))
 	{
+		printf("Vise od 5 blokova, spajanje s desnim");
 		ffs_remove_chunk(mpool, after);
 		chunk->size += after->size; /* join */
 	}
