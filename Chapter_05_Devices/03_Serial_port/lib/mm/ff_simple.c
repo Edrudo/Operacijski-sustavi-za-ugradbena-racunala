@@ -60,7 +60,7 @@ void *ffs_init(void *mem_segm, size_t size)
  */
 void *ffs_alloc(ffs_mpool_t *mpool, size_t size)
 {
-	ffs_hdr_t *iter, *chunk;
+	ffs_hdr_t *iter, *chunk, *before, *after;
 
 	ASSERT(mpool);
 
@@ -72,10 +72,28 @@ void *ffs_alloc(ffs_mpool_t *mpool, size_t size)
 	ALIGN_FW(size);
 
 	iter = mpool->first;
-	while (iter != NULL && iter->size < size){
-		while(iter->size < size && CHECK_FREE(iter->prev)){
-			
+	while (iter != NULL && iter->size < size + HEADER_SIZE){
+		before = ((void *) iter) - sizeof(size_t);
+		while(iter->size < size && CHECK_FREE(before)){
+			before = GET_HDR(before);
+			ffs_remove_chunk(mpool, before);
+			before->size += iter->size; /* join */
+			iter = before;
+			before = ((void *) iter) - sizeof(size_t);
 		}
+		after = GET_AFTER(iter);
+		while(iter->size < size && CHECK_FREE(after)){
+			after = GET_HDR(before);
+			ffs_remove_chunk(mpool, after);
+			iter->size += after->size; /* join */
+			after = GET_AFTER(iter);
+		}
+
+		if(iter->size < size + HEADER_SIZE){
+			break;
+		}
+
+		iter = iter->next;
 	}
 
 	if (iter == NULL)
