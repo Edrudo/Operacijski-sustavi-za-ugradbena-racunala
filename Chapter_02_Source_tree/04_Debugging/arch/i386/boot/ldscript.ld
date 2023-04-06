@@ -29,7 +29,7 @@ SECTIONS {
 
 	.bss 0x400000: AT(0x100000 + size_c + size_i + size_d)
 	{
-		*( .data* .bss* COMMON*);
+		*( .bss* COMMON* );
 
 		. = ALIGN (4096);
 	}
