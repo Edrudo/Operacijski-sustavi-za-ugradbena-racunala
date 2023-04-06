@@ -18,16 +18,16 @@ SECTIONS {
 	}
 	size_i = SIZEOF(.instrukcije);
 
-	.data 0x300000 : AT(0x100000 + size_c + size_i)
+	.rodata 0x300000 : AT(0x100000 + size_c + size_i)
 	{
-		kernel_data_addr = .;
+		kernel_rodata_addr = .;
 
 		/* read only data (constants), initialized global variables */
 		*( .rodata* )
 	}
-	size_d = SIZEOF(.data);
+	size_d = SIZEOF(.rodata);
 
-	.bss 0x410000: AT(0x100000 + size_c + size_i + size_d)
+	.bss 0x400000: AT(0x100000 + size_c + size_i + size_d)
 	{
 		*( .bss* COMMON* .data* );
 
