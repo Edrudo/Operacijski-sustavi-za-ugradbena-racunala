@@ -99,7 +99,7 @@ void *ffs_alloc(ffs_mpool_t *mpool, size_t size)
 	}
 
 	if (iter == NULL){
-		printf("Nije naden je odgovarajuci segment\n");
+		printf("Nije naden odgovarajuci segment\n");
 		return NULL; /* no adequate free chunk found */
 	}
 
