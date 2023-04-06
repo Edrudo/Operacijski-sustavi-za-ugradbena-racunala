@@ -11,7 +11,7 @@ void premjesti()
 
 	// code
 	char *od = (char *) 0x100000;
-	char *kamo = (char *) 0x0;
+	char *kamo = (char *) 0x100000;
 	for ( i = 0; i< size_d; i++ )
 		*kamo++ = *od++;
 		
