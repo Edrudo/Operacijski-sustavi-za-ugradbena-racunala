@@ -19,20 +19,20 @@ void premjesti()
 		*kamo++ = *od++;
 		
 	// instructions
-	char *od = (char *) 0x100000 + size_code;
-	char *kamo = (char *) 0x200000;
+	*od = (char *) 0x100000 + size_code;
+	*kamo = (char *) 0x200000;
 	for ( i = 0; i< size_d; i++ )
 		*kamo++ = *od++;
 
 	// constants
-	char *od = (char *) 0x100000 + size_code + size_instruction;
-	char *kamo = (char *) 0x300000;
+	*od = (char *) 0x100000 + size_code + size_instruction;
+	*kamo = (char *) 0x300000;
 	for ( i = 0; i< size_d; i++ )
 		*kamo++ = *od++;
 		
 	// data
-	char *od = (char *) 0x100000 + size_code + size_instruction + size_constants;
-	char *kamo = (char *) 0x400000;
+	*od = (char *) 0x100000 + size_code + size_instruction + size_constants;
+	*kamo = (char *) 0x400000;
 	for ( i = 0; i< size_d; i++ )
 		*kamo++ = *od++;
 
