@@ -98,9 +98,10 @@ void *ffs_alloc(ffs_mpool_t *mpool, size_t size)
 		iter = iter->next;
 	}
 
-	if (iter == NULL)
+	if (iter == NULL){
 		printf("Nije naden je odgovarajuci segment");
 		return NULL; /* no adequate free chunk found */
+	}
 
 	if (iter->size >= size + HEADER_SIZE)
 	{
