@@ -34,7 +34,7 @@ SECTIONS {
 
 	.bss data_a: AT(rom_a + size_c + size_i + size_con)
 	{
-		*( .bss* COMMON* .data* );
+		*( .bss* COMMON* .data* )
 
 		. = ALIGN (4096);
 	}
