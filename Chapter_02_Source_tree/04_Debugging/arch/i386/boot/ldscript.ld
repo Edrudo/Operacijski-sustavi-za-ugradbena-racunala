@@ -1,12 +1,7 @@
-rom_a = 0x100000;
-instructions_a = 0x200000;
-constants_a = 0x300000;
-data_a = 0x400000;
-
 ENTRY(arch_startup)
 
 SECTIONS {
-	.code rom_a: AT(rom_a)
+	.code 0x100000: AT(0x100000)
 	{
 		kernel_code_addr = .;
 
@@ -16,29 +11,29 @@ SECTIONS {
 	}
 	size_c = SIZEOF(.code);
 
-	.instrukcije instructions_a: AT(rom_a + size_c)
+	.instrukcije 0x200000: AT(0x100000 + size_c)
 	{
 
 		*( .text* )
 	}
 	size_i = SIZEOF(.instrukcije);
 
-	.rodata constants_a : AT(rom_a + size_c + size_i)
+	.rodata 0x300000 : AT(0x100000 + size_c + size_i)
 	{
 		kernel_rodata_addr = .;
 
 		/* read only data (constants), initialized global variables */
 		*( .rodata* )
 	}
-	size_con = SIZEOF(.rodata);
+	size_d = SIZEOF(.rodata);
 
-	.bss data_a: AT(rom_a + size_c + size_i + size_con)
+	.bss 0x400000: AT(0x100000 + size_c + size_i + size_d)
 	{
-		*( .bss* COMMON* .data* )
+		*( .bss* COMMON* .data* );
 
 		. = ALIGN (4096);
 	}
-	size_d = SIZEOF(.bss);
+	size_b = SIZEOF(.bss);
 
 	.stog 0x800000: AT(0x800000)
 	{
@@ -57,7 +52,6 @@ SECTIONS {
 
 #ifndef DEBUG
 	/DISCARD/ : { *(*) }
-	/DISCARD/ : { *(.eh_frame) }
 #endif
 	kernel_end_addr = .;
 }
