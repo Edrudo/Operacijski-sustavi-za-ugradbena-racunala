@@ -35,6 +35,11 @@ SECTIONS {
 	}
 	size_b = SIZEOF(.data);
 
+	.ef 0x500000:
+    {
+        *(.ef)
+    }
+
 	.stog 0x600000: AT(0x100000 + size_c + size_i + size_d + size_b)
 	{
 		stack_start = .; /* set a symbol to the start of the stack */
