@@ -24,20 +24,20 @@ void premjesti()
 
 	printf("Ovdje sam");
 	// instructions
-	char *od = (char *) (0x100000 + size_code);
-	char *kamo = (char *)(0x200000);
+	char *od = (char *) (rom + size_code);
+	char *kamo = (char *)(instructions);
 	for ( i = 0; i< size_instruction; i++ )
 		*kamo++ = *od++;
 
 	// constants
-	od = (char *) (0x100000 + size_code + size_instruction);
-	kamo = (char *) (0x300000);
+	od = (char *) (rom + size_code + size_instruction);
+	kamo = (char *) (constants);
 	for ( i = 0; i< size_constants; i++ )
 		*kamo++ = *od++;
 		
 	// data
-	od = (char *) (0x100000 + size_code + size_instruction + size_constants);
-	kamo = (char *) (0x400000);
+	od = (char *) (rom + size_code + size_instruction + size_constants);
+	kamo = (char *) (data);
 	for ( i = 0; i< size_data; i++ )
 		*kamo++ = *od++;
 
