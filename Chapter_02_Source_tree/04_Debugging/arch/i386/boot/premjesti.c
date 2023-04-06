@@ -1,4 +1,5 @@
 #include <types/basic.h>
+#include <stdio.h>
 void premjesti()
 {
 	extern size_t size_c;
