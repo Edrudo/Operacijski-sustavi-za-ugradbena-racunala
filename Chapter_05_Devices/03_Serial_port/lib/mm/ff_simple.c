@@ -75,7 +75,7 @@ void *ffs_alloc(ffs_mpool_t *mpool, size_t size)
 	while (iter != NULL && iter->size < size + HEADER_SIZE){
 		before = ((void *) iter) - sizeof(size_t);
 		while(iter->size < size && CHECK_FREE(before)){
-			printf("Spajanje memorije s lijevim susjedom");
+			printf("Spajanje memorije s lijevim susjedom\n");
 			before = GET_HDR(before);
 			ffs_remove_chunk(mpool, before);
 			before->size += iter->size; /* join */
@@ -84,7 +84,7 @@ void *ffs_alloc(ffs_mpool_t *mpool, size_t size)
 		}
 		after = GET_AFTER(iter);
 		while(iter->size < size && CHECK_FREE(after)){
-			printf("Spajanje memorije s desnim susjedom");
+			printf("Spajanje memorije s desnim susjedom\n");
 			after = GET_HDR(before);
 			ffs_remove_chunk(mpool, after);
 			iter->size += after->size; /* join */
@@ -99,13 +99,13 @@ void *ffs_alloc(ffs_mpool_t *mpool, size_t size)
 	}
 
 	if (iter == NULL){
-		printf("Nije naden je odgovarajuci segment");
+		printf("Nije naden je odgovarajuci segment\n");
 		return NULL; /* no adequate free chunk found */
 	}
 
 	if (iter->size >= size + HEADER_SIZE)
 	{
-		printf("Naden je odgovarajuci segment");
+		printf("Naden je odgovarajuci segment\n");
 		/* split chunk */
 		/* first part remains in free list, just update size */
 		iter->size -= size;
@@ -152,7 +152,7 @@ int ffs_free(ffs_mpool_t *mpool, void *chunk_to_be_freed)
 	}while(chunk_tmp->next != NULL);
 
 	if(num_free_chunks < 6){
-		printf("Manje od 6 blokova, nema spajanja");
+		printf("Manje od 6 blokova, nema spajanja\n");
 		ffs_insert_chunk(mpool, chunk);
 		return 0;
 	}
@@ -161,7 +161,7 @@ int ffs_free(ffs_mpool_t *mpool, void *chunk_to_be_freed)
 	before = ((void *) chunk) - sizeof(size_t);
 	if (CHECK_FREE(before))
 	{
-		printf("Vise od 5 blokova, spajanje s lijevim");
+		printf("Vise od 5 blokova, spajanje s lijevim\n");
 		before = GET_HDR(before);
 		ffs_remove_chunk(mpool, before);
 		before->size += chunk->size; /* join */
@@ -172,7 +172,7 @@ int ffs_free(ffs_mpool_t *mpool, void *chunk_to_be_freed)
 	after = GET_AFTER(chunk);
 	if (CHECK_FREE(after))
 	{
-		printf("Vise od 5 blokova, spajanje s desnim");
+		printf("Vise od 5 blokova, spajanje s desnim\n");
 		ffs_remove_chunk(mpool, after);
 		chunk->size += after->size; /* join */
 	}
