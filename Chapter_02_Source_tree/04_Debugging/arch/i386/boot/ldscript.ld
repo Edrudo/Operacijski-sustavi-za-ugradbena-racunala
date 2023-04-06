@@ -40,6 +40,7 @@ SECTIONS {
         *( .stog )
         . = ALIGN (4096);
 	}
+	/DISCARD/ : { *(.eh_frame) }
 
 	/*
 	 * what with other sections generated with gcc (various versions)?
@@ -52,7 +53,6 @@ SECTIONS {
 
 #ifndef DEBUG
 	/DISCARD/ : { *(*) }
-	/DISCARD/ : { *(.eh_frame) }
 #endif
 	kernel_end_addr = .;
 }
