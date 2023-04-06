@@ -11,7 +11,7 @@ void premjesti()
 	size_t size_data = (size_t) &size_b;
 	size_t i;
 
-		
+	print("OVdje sam");
 	// instructions
 	char *od = (char *) (0x100000 + size_code);
 	char *kamo = (char *)(0x200000);
