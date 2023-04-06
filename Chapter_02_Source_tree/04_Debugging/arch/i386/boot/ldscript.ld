@@ -23,7 +23,7 @@ SECTIONS {
 		kernel_data_addr = .;
 
 		/* read only data (constants), initialized global variables */
-		* ( .rodata* .data* )
+		* ( .rodata* )
 	}
 	size_d = SIZEOF(.data);
 
