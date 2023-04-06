@@ -75,6 +75,7 @@ void *ffs_alloc(ffs_mpool_t *mpool, size_t size)
 	while (iter != NULL && iter->size < size + HEADER_SIZE){
 		before = ((void *) iter) - sizeof(size_t);
 		while(iter->size < size && CHECK_FREE(before)){
+			printf("Spajanje memorije s lijevim susjedom");
 			before = GET_HDR(before);
 			ffs_remove_chunk(mpool, before);
 			before->size += iter->size; /* join */
@@ -83,6 +84,7 @@ void *ffs_alloc(ffs_mpool_t *mpool, size_t size)
 		}
 		after = GET_AFTER(iter);
 		while(iter->size < size && CHECK_FREE(after)){
+			printf("Spajanje memorije s desnim susjedom");
 			after = GET_HDR(before);
 			ffs_remove_chunk(mpool, after);
 			iter->size += after->size; /* join */
@@ -97,10 +99,12 @@ void *ffs_alloc(ffs_mpool_t *mpool, size_t size)
 	}
 
 	if (iter == NULL)
+		printf("Nije naden je odgovarajuci segment");
 		return NULL; /* no adequate free chunk found */
 
 	if (iter->size >= size + HEADER_SIZE)
 	{
+		printf("Naden je odgovarajuci segment");
 		/* split chunk */
 		/* first part remains in free list, just update size */
 		iter->size -= size;
