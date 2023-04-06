@@ -1,7 +1,7 @@
 ENTRY(arch_startup)
 
 SECTIONS {
-	.code 0x0: AT(0x100000)
+	.code 0x100000: AT(0x100000)
 	{
 		kernel_code_addr = .;
 
@@ -34,11 +34,6 @@ SECTIONS {
 		. = ALIGN (4096);
 	}
 	size_b = SIZEOF(.data);
-
-	.ef 0x500000:
-    {
-        *(.ef)
-    }
 
 	.stog 0x600000: AT(0x100000 + size_c + size_i + size_d + size_b)
 	{
