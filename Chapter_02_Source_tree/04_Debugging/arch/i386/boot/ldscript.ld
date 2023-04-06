@@ -13,14 +13,16 @@ SECTIONS {
 		*?/boot/startup.asm.o ( .text* )
 		*?/boot/premjesti.o ( .text* )
 	}
-	.instrukcije 0x200000: AT(0x20000)
+	size_c = SIZEOF(.code);
+
+	.instrukcije 0x200000: AT(0x0 + size_c)
 	{
 
 		*( .text* )
 	}
 	size_i = SIZEOF(.instrukcije);
 
-	.data 0x300000 : AT(0x30000)
+	.data 0x300000 : AT(0x0 + size_c + size_i)
 	{
 		kernel_data_addr = .;
 
@@ -29,14 +31,15 @@ SECTIONS {
 	}
 	size_data = SIZEOF(.data);
 
-	.bss 0x400000: AT(0x40000)
+	.bss 0x400000: AT(0x0 + size_c + size_i + size_data)
 	{
 		*( .bss* COMMON* )
 
 		. = ALIGN (4096);
 	}
+	size_bss = SIZEOF(.data);
 
-	.stog 0x600000: AT(0x60000)
+	.stog 0x600000: AT(0x0 + size_c + size_i + size_data + size_bss)
 	{
 		*( .stog )
 		. = ALIGN (4096);
