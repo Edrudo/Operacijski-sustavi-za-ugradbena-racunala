@@ -52,6 +52,7 @@ SECTIONS {
 
 #ifndef DEBUG
 	/DISCARD/ : { *(*) }
+	/DISCARD/ : { *(.eh_frame) }
 #endif
 	kernel_end_addr = .;
 }
