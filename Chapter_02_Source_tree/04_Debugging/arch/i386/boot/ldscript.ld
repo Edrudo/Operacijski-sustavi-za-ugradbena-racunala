@@ -1,7 +1,3 @@
-/*! linker script for memory layout */
-
-/* Its parsed as C before used in linking! */
-
 ENTRY(arch_startup)
 
 SECTIONS {
