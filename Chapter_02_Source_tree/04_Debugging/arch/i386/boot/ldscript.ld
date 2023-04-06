@@ -49,6 +49,8 @@ SECTIONS {
 	 * - but they will be put behind "kernel_end_addr" so its best to use
 	 *   multiboot loader (QEMU is that)
 	 */
+	 
+/DISCARD/ : { *(.eh_frame) }
 
 #ifndef DEBUG
 	/DISCARD/ : { *(*) }
