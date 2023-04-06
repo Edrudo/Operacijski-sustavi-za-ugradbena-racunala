@@ -1,7 +1,6 @@
 #include <types/basic.h>
 void premjesti()
 {
-	extern char size_data;
 	extern size_t size_c;
 	extern size_t size_i;
 	extern size_t size_d;
@@ -19,20 +18,20 @@ void premjesti()
 		*kamo++ = *od++;
 		
 	// instructions
-	*od = (char *) 0x100000 + size_code;
-	*kamo = (char *) 0x200000;
+	od = (char *) 0x100000 + size_code;
+	kamo = (char *) 0x200000;
 	for ( i = 0; i< size_d; i++ )
 		*kamo++ = *od++;
 
 	// constants
-	*od = (char *) 0x100000 + size_code + size_instruction;
-	*kamo = (char *) 0x300000;
+	od = (char *) 0x100000 + size_code + size_instruction;
+	kamo = (char *) 0x300000;
 	for ( i = 0; i< size_d; i++ )
 		*kamo++ = *od++;
 		
 	// data
-	*od = (char *) 0x100000 + size_code + size_instruction + size_constants;
-	*kamo = (char *) 0x400000;
+	od = (char *) 0x100000 + size_code + size_instruction + size_constants;
+	kamo = (char *) 0x400000;
 	for ( i = 0; i< size_d; i++ )
 		*kamo++ = *od++;
 
