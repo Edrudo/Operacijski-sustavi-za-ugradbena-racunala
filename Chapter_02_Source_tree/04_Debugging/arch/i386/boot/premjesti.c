@@ -4,15 +4,25 @@ void premjesti()
 {
 	extern size_t size_c;
 	extern size_t size_i;
+	extern size_t size_con;
 	extern size_t size_d;
-	extern size_t size_b;
-	size_t size_code = (size_t) &size_c;
-	size_t size_instruction = (size_t) &size_i;
-	size_t size_constants = (size_t) &size_d;
-	size_t size_data = (size_t) &size_b;
+	extern size_t rom_a;
+	extern size_t instructions_a;
+	extern size_t constants_a;
+	extern size_t data_a;
+
+
+	size_t *size_code = (size_t) &size_c;
+	size_t *size_instruction = (size_t) &size_i;
+	size_t *size_constants = (size_t) &size_con;
+	size_t *size_data = (size_t) &size_d;
+	size_t *rom = (size_t) &rom_a;
+	size_t *instructions = (size_t) &instructions_a;
+	size_t *constants = (size_t) &constants_a;
+	size_t *data = (size_t) &data_a;
 	size_t i;
 
-	printf("OVdje sam");
+	printf("Ovdje sam");
 	// instructions
 	char *od = (char *) (0x100000 + size_code);
 	char *kamo = (char *)(0x200000);
