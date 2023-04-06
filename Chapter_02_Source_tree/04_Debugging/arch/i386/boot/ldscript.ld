@@ -5,7 +5,7 @@
 ENTRY(arch_startup)
 
 SECTIONS {
-	.code 0x0 :
+	.code 0x0: AT(0x100000):
 	{
 		kernel_code_addr = .;
 
@@ -15,31 +15,31 @@ SECTIONS {
 	}
 	size_c = SIZEOF(.code);
 
-	.instrukcije 0x200000: AT(0x0 + size_c)
+	.instrukcije 0x200000: AT(0x100000 + size_c)
 	{
 
 		*( .text* )
 	}
 	size_i = SIZEOF(.instrukcije);
 
-	.data 0x300000 : AT(0x0 + size_c + size_i)
+	.data 0x300000 : AT(0x100000 + size_c + size_i)
 	{
 		kernel_data_addr = .;
 
 		/* read only data (constants), initialized global variables */
 		* ( .rodata* .data* )
 	}
-	size_data = SIZEOF(.data);
+	size_d = SIZEOF(.data);
 
-	.bss 0x400000: AT(0x0 + size_c + size_i + size_data)
+	.bss 0x400000: AT(0x100000 + size_c + size_i + size_d)
 	{
 		*( .bss* COMMON* )
 
 		. = ALIGN (4096);
 	}
-	size_bss = SIZEOF(.data);
+	size_b = SIZEOF(.data);
 
-	.stog 0x600000: AT(0x0 + size_c + size_i + size_data + size_bss)
+	.stog 0x600000: AT(0x100000 + size_c + size_i + size_d + size_b)
 	{
 		*( .stog )
 		. = ALIGN (4096);
