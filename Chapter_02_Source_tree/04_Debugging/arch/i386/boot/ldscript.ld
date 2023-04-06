@@ -33,7 +33,7 @@ SECTIONS {
 
 		. = ALIGN (4096);
 	}
-	size_b = SIZEOF(.data);
+	size_b = SIZEOF(.bss);
 
 	.stog 0x600000: AT(0x100000 + size_c + size_i + size_d + size_b)
 	{
