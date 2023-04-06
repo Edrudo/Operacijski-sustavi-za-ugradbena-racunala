@@ -4,7 +4,6 @@ void premjesti()
 	extern size_t size_c;
 	extern size_t size_i;
 	extern size_t size_d;
-	extern size_t size_b;
 	size_t size_code = (size_t) &size_c;
 	size_t size_instruction = (size_t) &size_i;
 	size_t size_constants = (size_t) &size_d;
