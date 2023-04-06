@@ -37,7 +37,7 @@ SECTIONS {
 
 	.stog 0x800000: AT(0x800000)
 	{
-        *( .stog )git 
+        *( .stog )
         . = ALIGN (4096);
 	}
 
