@@ -5,16 +5,21 @@
 ENTRY(arch_startup)
 
 SECTIONS {
-	.code LOAD_ADDR :
+	.code 0x0 :
 	{
 		kernel_code_addr = .;
 
 		/* instructions */
 		*?/boot/startup.asm.o ( .text* )
-
+		*?/boot/premjesti.o ( .text* )
+	}
+	.instrukcije 0x200000 : AT(0x10000)
+	{
 		*( .text* )
 	}
-	.data :
+	size_i = SIZEOF(.instrukcije);
+
+	.data 0x400000: AT(0x50000)
 	{
 		kernel_data_addr = .;
 
@@ -22,7 +27,7 @@ SECTIONS {
 		* ( .rodata* .data* )
 	}
 	size_data = SIZEOF(.data);
-	.bss :
+	.bss 0x800000: AT(0x80000)
 	{
 		*( .bss* COMMON* )
 
