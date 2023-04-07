@@ -2,7 +2,6 @@
 
 #define _FF_SIMPLE_C_
 #include <lib/ff_simple.h>
-#include <stdlib.h>
 
 #ifndef ASSERT
 #include ASSERT_H
