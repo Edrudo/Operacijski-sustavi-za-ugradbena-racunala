@@ -106,16 +106,17 @@ void *ffs_alloc(ffs_mpool_t *mpool, size_t size)
 	ALIGN_FW(size);
 
 	iter = mpool->first;
-	while (iter != NULL && iter->size < size){
-		iter = iter->next;
-	}
-
-	if (iter == NULL){
-		printf("No adequate free chunk found\n");
-		return NULL; /* no adequate free chunk found */
-	}
+	
 
 	if(cnt <= 110){
+		while (iter != NULL && iter->size < size){
+			iter = iter->next;
+		}
+
+		if (iter == NULL){
+			printf("No adequate free chunk found\n");
+			return NULL; /* no adequate free chunk found */
+		}
 		printf("Adequate free chunk found\n");
 		if (iter->size >= size + HEADER_SIZE)
 		{
@@ -134,6 +135,14 @@ void *ffs_alloc(ffs_mpool_t *mpool, size_t size)
 			ffs_remove_chunk(mpool, chunk);
 		}
 	}else{
+		while (iter != NULL && iter->size != size){
+			iter = iter->next;
+		}
+
+		if (iter == NULL){
+			printf("No adequate free chunk found\n");
+			return NULL; /* no adequate free chunk found */
+		}
 		if (iter->size == size)
 		{
 			printf("Adequate free chunk found and it is the same size\n");
