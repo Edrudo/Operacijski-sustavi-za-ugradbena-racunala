@@ -112,9 +112,10 @@ void *ffs_alloc(ffs_mpool_t *mpool, size_t size)
 		return NULL; /* no adequate free chunk found */
 	}
 
-	printf("Adequate free chunk found\n");
-	if (iter->size >= size + HEADER_SIZE)
+	printf("Adequate free chunk found: ");
+	if (iter->size == size + HEADER_SIZE)
 	{
+		printf("Chunk is the same size\n");
 		/* split chunk */
 		/* first part remains in free list, just update size */
 		iter->size -= size;
@@ -123,11 +124,9 @@ void *ffs_alloc(ffs_mpool_t *mpool, size_t size)
 		chunk = GET_AFTER(iter);
 		chunk->size = size;
 	}
-	else { /* give whole chunk */
-		chunk = iter;
-
-		/* remove it from free list */
-		ffs_remove_chunk(mpool, chunk);
+	else { /*return null*/
+		printf("Chunk is not the same size\n");
+		return NULL; /* no adequate free chunk found */
 	}
 
 	MARK_USED(chunk);
