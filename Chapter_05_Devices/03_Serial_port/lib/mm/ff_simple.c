@@ -103,7 +103,7 @@ void *ffs_alloc(ffs_mpool_t *mpool, size_t size)
 	ALIGN_FW(size);
 
 	iter = mpool->first;
-	while (iter != NULL && iter->size != size){
+	while (iter != NULL && iter->size < size){
 		iter = iter->next;
 	}
 
