@@ -21,6 +21,7 @@ SECTIONS {
 		/* read only data (constants), initialized global variables */
 		* ( .rodata* .data* )
 	}
+	size_data = SIZEOF(.data);
 	.bss :
 	{
 		*( .bss* COMMON* )
