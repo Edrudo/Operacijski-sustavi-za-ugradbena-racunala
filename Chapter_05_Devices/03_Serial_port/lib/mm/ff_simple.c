@@ -70,7 +70,10 @@ void *ffs_init(void *mem_segm, size_t size)
 	
 	// brisanje
 	for(int i = 0; i < 100; i++){
-		ffs_free(mpool, chunks[i]);
+		if(chunks[i] != NULL){
+			printf("Deleteing chunk %n in init\n", i);
+			ffs_free(mpool, chunks[i]);
+		}
 	}
 
 	printf("Init finished\n");
