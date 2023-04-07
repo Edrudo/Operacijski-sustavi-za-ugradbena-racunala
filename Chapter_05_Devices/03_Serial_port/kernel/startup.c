@@ -56,10 +56,11 @@ void k_startup()
 	stdio_init(); /* initialize standard input & output devices */
 
 	/* start desired program(s) */
-	hello_world();
-	keyboard();
-	timer();
+	//hello_world();
+	//keyboard();
+	//timer();
 	/* segm_fault(); */
+	demo();
 
 	kprintf("\nSystem halted!\n");
 	halt();

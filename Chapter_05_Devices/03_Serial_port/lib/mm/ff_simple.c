@@ -49,6 +49,40 @@ void *ffs_init(void *mem_segm, size_t size)
 
 	ffs_insert_chunk(mpool, chunk); /* first and only free chunk */
 
+	// inicijalno zauzimanje
+	for(int i = 0; i < 25; i++){
+		ffs_alloc(mpool, 128);
+	}
+
+	for(int i = 0; i < 25; i++){
+		ffs_alloc(mpool, 256);
+	}
+	
+	for(int i = 0; i < 25; i++){
+		ffs_alloc(mpool, 512);
+	}
+	
+	for(int i = 0; i < 25; i++){
+		ffs_alloc(mpool, 1024);
+	}
+	
+	// brisanje
+	for(int i = 0; i < 25; i++){
+		ffs_free(mpool, 128);
+	}
+
+	for(int i = 0; i < 25; i++){
+		ffs_free(mpool, 256);
+	}
+	
+	for(int i = 0; i < 25; i++){
+		ffs_free(mpool, 512);
+	}
+	
+	for(int i = 0; i < 25; i++){
+		ffs_free(mpool, 1024);
+	}
+
 	return mpool;
 }
 
@@ -72,7 +106,7 @@ void *ffs_alloc(ffs_mpool_t *mpool, size_t size)
 	ALIGN_FW(size);
 
 	iter = mpool->first;
-	while (iter != NULL && iter->size < size)
+	while (iter != NULL && iter->size == size)
 		iter = iter->next;
 
 	if (iter == NULL)
@@ -117,24 +151,6 @@ int ffs_free(ffs_mpool_t *mpool, void *chunk_to_be_freed)
 	ASSERT(CHECK_USED(chunk));
 
 	MARK_FREE(chunk); /* mark it as free */
-
-	/* join with left? */
-	before = ((void *) chunk) - sizeof(size_t);
-	if (CHECK_FREE(before))
-	{
-		before = GET_HDR(before);
-		ffs_remove_chunk(mpool, before);
-		before->size += chunk->size; /* join */
-		chunk = before;
-	}
-
-	/* join with right? */
-	after = GET_AFTER(chunk);
-	if (CHECK_FREE(after))
-	{
-		ffs_remove_chunk(mpool, after);
-		chunk->size += after->size; /* join */
-	}
 
 	/* insert chunk in free list */
 	ffs_insert_chunk(mpool, chunk);
