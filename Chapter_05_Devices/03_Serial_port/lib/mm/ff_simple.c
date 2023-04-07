@@ -51,36 +51,36 @@ void *ffs_init(void *mem_segm, size_t size)
 
 	// inicijalno zauzimanje
 	for(int i = 0; i < 25; i++){
-		ffs_alloc(mpool, 128);
+		ffs_alloc(mpool, (size_t) 128);
 	}
 
 	for(int i = 0; i < 25; i++){
-		ffs_alloc(mpool, 256);
+		ffs_alloc(mpool, (size_t) 256);
 	}
 	
 	for(int i = 0; i < 25; i++){
-		ffs_alloc(mpool, 512);
+		ffs_alloc(mpool, (size_t) 512);
 	}
 	
 	for(int i = 0; i < 25; i++){
-		ffs_alloc(mpool, 1024);
+		ffs_alloc(mpool, (size_t) 1024);
 	}
 	
 	// brisanje
 	for(int i = 0; i < 25; i++){
-		ffs_free(mpool, 128);
+		ffs_free(mpool, (size_t) 128);
 	}
 
 	for(int i = 0; i < 25; i++){
-		ffs_free(mpool, 256);
+		ffs_free(mpool, (size_t) 256);
 	}
 	
 	for(int i = 0; i < 25; i++){
-		ffs_free(mpool, 512);
+		ffs_free(mpool, (size_t) 512);
 	}
 	
 	for(int i = 0; i < 25; i++){
-		ffs_free(mpool, 1024);
+		ffs_free(mpool, (size_t) 1024);
 	}
 
 	return mpool;
@@ -143,7 +143,7 @@ void *ffs_alloc(ffs_mpool_t *mpool, size_t size)
  */
 int ffs_free(ffs_mpool_t *mpool, void *chunk_to_be_freed)
 {
-	ffs_hdr_t *chunk, *before, *after;
+	ffs_hdr_t *chunk;
 
 	ASSERT(mpool && chunk_to_be_freed);
 
