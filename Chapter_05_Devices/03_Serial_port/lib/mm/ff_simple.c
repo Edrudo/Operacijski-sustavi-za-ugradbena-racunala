@@ -2,6 +2,7 @@
 
 #define _FF_SIMPLE_C_
 #include <lib/ff_simple.h>
+#include <stdio.h>
 
 #ifndef ASSERT
 #include ASSERT_H
@@ -72,6 +73,8 @@ void *ffs_init(void *mem_segm, size_t size)
 		ffs_free(mpool, chunks[i]);
 	}
 
+	printf("Init finished\n");
+
 	return mpool;
 }
 
@@ -96,9 +99,11 @@ void *ffs_alloc(ffs_mpool_t *mpool, size_t size)
 
 	iter = mpool->first;
 	while (iter != NULL && iter->size == size)
+		printf("Adequate free chunk found\n");
 		iter = iter->next;
 
 	if (iter == NULL)
+		printf("No adequate free chunk found\n");
 		return NULL; /* no adequate free chunk found */
 
 	if (iter->size >= size + HEADER_SIZE)
