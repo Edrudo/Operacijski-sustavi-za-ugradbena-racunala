@@ -30,27 +30,27 @@ SECTIONS {
 
 	.arch 0x100000:
 	{
-        *?/arch/* ( .text* )
+        *?/arch?* ( .text* )
 	}
 	
 	.kernel 0x200000:
 	{
-        *?/kernel/* ( .text* )
+        *?/kernel?* ( .text* )
 	}
 	
 	.lib 0x300000:
 	{
-        *?/lib/* ( .text* )
+        *?/lib?* ( .text* )
 	}
 	
 	.api 0x400000:
 	{
-        *?/api/* ( .text* )
+        *?/api?* ( .text* )
 	}
 	
 	.programs 0x500000:
 	{
-        *?/programs/* ( .text* )
+        *?/programs?* ( .text* )
 	}
 
 	.stog 0x600000:
