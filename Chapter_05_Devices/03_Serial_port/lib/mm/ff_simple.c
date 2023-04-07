@@ -115,7 +115,7 @@ void *ffs_alloc(ffs_mpool_t *mpool, size_t size)
 		return NULL; /* no adequate free chunk found */
 	}
 
-	if(cnt <= 100){
+	if(cnt <= 110){
 		printf("Adequate free chunk found\n");
 		if (iter->size >= size + HEADER_SIZE)
 		{
