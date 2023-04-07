@@ -1,34 +1,24 @@
+
 #include <types/basic.h>
-#include <stdio.h>
 void premjesti()
 {
-	extern size_t size_c;
+	extern char size_data;
 	extern size_t size_i;
-	extern size_t size_d;
-	extern size_t size_b;
-	size_t size_code = (size_t) &size_c;
-	size_t size_instruction = (size_t) &size_i;
-	size_t size_constants = (size_t) &size_d;
-	size_t size_data = (size_t) &size_b;
+	size_t size_d = (size_t) &size_data;
 	size_t i;
+	char *od = (char *) 0x50000;
+	char *kamo = (char *) 0x400000;
 
-	printf("Ovdje sam");
-	// instructions
-	char *od = (char *) (0x100000 + size_code);
-	char *kamo = (char *)(0x200000);
-	for ( i = 0; i< size_instruction; i++ )
+	//for ( i = 0; i< size_d; i++ )
+	//	kamo[i] = od[i];
+
+	for ( i = 0; i< size_d; i++ )
 		*kamo++ = *od++;
 
-	// constants
-	od = (char *) (0x100000 + size_code + size_instruction);
-	kamo = (char *) (0x300000);
-	for ( i = 0; i< size_constants; i++ )
-		*kamo++ = *od++;
-		
-	// data
-	od = (char *) (0x100000 + size_code + size_instruction + size_constants);
-	kamo = (char *) (0x400000);
-	for ( i = 0; i< size_data; i++ )
-		*kamo++ = *od++;
+	od = (char *) 0x10000;
+	kamo = (char *) 0x200000;
+	size_d = (size_t) &size_i;
 
+	for ( i = 0; i< size_d; i++ )
+		*kamo++ = *od++;
 }

@@ -1,41 +1,59 @@
+/*! linker script for memory layout */
+
+/* Its parsed as C before used in linking! */
+
 ENTRY(arch_startup)
 
 SECTIONS {
-	.code 0x100000: AT(0x100000)
+	.code LOAD_ADDR :
 	{
 		kernel_code_addr = .;
 
 		/* instructions */
 		*?/boot/startup.asm.o ( .text* )
-		*?/boot/premjesti.o ( .text* )
-	}
-	size_c = SIZEOF(.code);
-
-	.instrukcije 0x200000: AT(0x100000 + size_c)
-	{
 
 		*( .text* )
 	}
-	size_i = SIZEOF(.instrukcije);
-
-	.rodata 0x300000 : AT(0x100000 + size_c + size_i)
+	.data :
 	{
-		kernel_rodata_addr = .;
+		kernel_data_addr = .;
 
 		/* read only data (constants), initialized global variables */
-		*( .rodata* )
+		* ( .rodata* .data* )
 	}
-	size_d = SIZEOF(.rodata);
-
-	.bss 0x400000: AT(0x100000 + size_c + size_i + size_d)
+	.bss :
 	{
-		*( .bss* COMMON* .data* );
+		*( .bss* COMMON* )
 
 		. = ALIGN (4096);
 	}
-	size_b = SIZEOF(.bss);
 
-	.stog 0x800000: AT(0x800000)
+	.arch 0x100000:
+	{
+        *?/arch/* ( .text* )
+	}
+	
+	.kernel 0x200000:
+	{
+        *?/kernel/* ( .text* )
+	}
+	
+	.lib 0x300000:
+	{
+        *?/lib/* ( .text* )
+	}
+	
+	.api 0x400000:
+	{
+        *?/api/* ( .text* )
+	}
+	
+	.programs 0x500000:
+	{
+        *?/programs/* ( .text* )
+	}
+
+	.stog 0x600000:
 	{
         *( .stog )
         . = ALIGN (4096);
@@ -49,8 +67,6 @@ SECTIONS {
 	 * - but they will be put behind "kernel_end_addr" so its best to use
 	 *   multiboot loader (QEMU is that)
 	 */
-	 
-/DISCARD/ : { *(.eh_frame) }
 
 #ifndef DEBUG
 	/DISCARD/ : { *(*) }
