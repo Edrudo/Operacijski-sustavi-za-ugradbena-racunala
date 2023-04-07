@@ -165,10 +165,9 @@ int ffs_free(ffs_mpool_t *mpool, void *chunk_to_be_freed)
  * Routine that removes a chunk from 'free' list (free_list)
  * \param mpool Memory pool to be used
  * \param chunk Chunk header
- */
 static void ffs_remove_chunk(ffs_mpool_t *mpool, ffs_hdr_t *chunk)
 {
-	if (chunk == mpool->first) /* first in list? */
+	if (chunk == mpool->first) /* first in list?
 		mpool->first = chunk->next;
 	else
 		chunk->prev->next = chunk->next;
@@ -176,6 +175,7 @@ static void ffs_remove_chunk(ffs_mpool_t *mpool, ffs_hdr_t *chunk)
 	if (chunk->next != NULL)
 		chunk->next->prev = chunk->prev;
 }
+*/
 
 /*!
  * Routine that insert a chunk into 'free' list (free_list)
