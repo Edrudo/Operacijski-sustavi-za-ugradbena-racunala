@@ -8,6 +8,8 @@
 #include ASSERT_H
 #endif
 
+int cnt = 0;
+
 /*!
  * Initialize dynamic memory manager
  * \param mem_segm Memory pool start address
@@ -112,18 +114,37 @@ void *ffs_alloc(ffs_mpool_t *mpool, size_t size)
 		return NULL; /* no adequate free chunk found */
 	}
 
-	printf("Adequate free chunk found: ");
-	if (iter->size == size + HEADER_SIZE)
-	{
-		printf("Chunk is the same size\n");
-		chunk = iter;
+	if(cnt < 100){
+		printf("Adequate free chunk found\n");
+		if (iter->size >= size + HEADER_SIZE)
+		{
+			/* split chunk */
+			/* first part remains in free list, just update size */
+			iter->size -= size;
+			CLONE_SIZE_TO_TAIL(iter);
 
-		/* remove it from free list */
-		ffs_remove_chunk(mpool, chunk);
-	}
-	else { /*return null*/
-		printf("Chunk is not the same size\n");
-		return NULL; /* no adequate free chunk found */
+			chunk = GET_AFTER(iter);
+			chunk->size = size;
+		}
+		else { /* give whole chunk */
+			chunk = iter;
+
+			/* remove it from free list */
+			ffs_remove_chunk(mpool, chunk);
+		}
+	}else{
+		if (iter->size == size)
+		{
+			printf("Adequate free chunk found and it is the same size\n");
+			chunk = iter;
+
+			/* remove it from free list */
+			ffs_remove_chunk(mpool, chunk);
+		}
+		else { /* give whole chunk */
+			printf("Adequate free chunk found but it is not the same size\n");
+			return NULL;
+		}
 	}
 
 	MARK_USED(chunk);
