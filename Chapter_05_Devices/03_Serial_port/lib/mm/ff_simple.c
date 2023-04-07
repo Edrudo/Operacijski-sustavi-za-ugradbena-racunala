@@ -50,7 +50,7 @@ void *ffs_init(void *mem_segm, size_t size)
 
 	ffs_insert_chunk(mpool, chunk); /* first and only free chunk */
 
-	void *chunks[100];
+	void* chunks[100];
 	// inicijalno zauzimanje
 	for(int i = 0; i < 25; i++){
 		chunks[i] = ffs_alloc(mpool, (size_t) 128);
