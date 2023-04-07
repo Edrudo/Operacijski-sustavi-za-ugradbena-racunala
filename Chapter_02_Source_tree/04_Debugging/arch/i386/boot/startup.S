@@ -33,7 +33,6 @@ arch_startup:
 	pushl	$0
 	popf
 
-	call premjesti
 	/* set up GDT, IDT */
 	call	arch_descriptors_init
 
