@@ -49,38 +49,27 @@ void *ffs_init(void *mem_segm, size_t size)
 
 	ffs_insert_chunk(mpool, chunk); /* first and only free chunk */
 
+	void *chunks[] = malloc(sizeof(void*), 100);
 	// inicijalno zauzimanje
 	for(int i = 0; i < 25; i++){
-		ffs_alloc(mpool, (size_t) 128);
+		chunks[i] = ffs_alloc(mpool, (size_t) 128);
 	}
 
 	for(int i = 0; i < 25; i++){
-		ffs_alloc(mpool, (size_t) 256);
+		chunks[i + 25] = ffs_alloc(mpool, (size_t) 256);
 	}
 	
 	for(int i = 0; i < 25; i++){
-		ffs_alloc(mpool, (size_t) 512);
+		chunks[i + 50] = ffs_alloc(mpool, (size_t) 512);
 	}
 	
 	for(int i = 0; i < 25; i++){
-		ffs_alloc(mpool, (size_t) 1024);
+		chunks[i + 75] = ffs_alloc(mpool, (size_t) 1024);
 	}
 	
 	// brisanje
-	for(int i = 0; i < 25; i++){
-		ffs_free(mpool, (size_t) 128);
-	}
-
-	for(int i = 0; i < 25; i++){
-		ffs_free(mpool, (size_t) 256);
-	}
-	
-	for(int i = 0; i < 25; i++){
-		ffs_free(mpool, (size_t) 512);
-	}
-	
-	for(int i = 0; i < 25; i++){
-		ffs_free(mpool, (size_t) 1024);
+	for(int i = 0; i < 100; i++){
+		ffs_free(mpool, chunks[i]);
 	}
 
 	return mpool;
