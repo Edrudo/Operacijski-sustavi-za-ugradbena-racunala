@@ -5,58 +5,32 @@
 ENTRY(arch_startup)
 
 SECTIONS {
-	.code 0x0 :
-	{
-		kernel_code_addr = .;
-
-		/* instructions */
-		*?/boot/startup.asm.o ( .text* )
-		*?/boot/premjesti.o ( .text* )
-	}
-	.instrukcije 0x200000 : AT(0x10000)
-	{
-		*( .text* )
-	}
-	size_i = SIZEOF(.instrukcije);
-
-	.data 0x400000: AT(0x50000)
-	{
-		kernel_data_addr = .;
-
-		/* read only data (constants), initialized global variables */
-		* ( .rodata* .data* )
-	}
-	size_data = SIZEOF(.data);
-	.bss 0x800000: AT(0x80000)
-	{
-		*( .bss* COMMON* )
-
-		. = ALIGN (4096);
-	}
-
 	.arch 0x100000:
 	{
-        *?/arch?* ( .text* )
+		kernel_code_addr = .;
+		*?/boot/startup.asm.o ( .text* )
+		*?/boot/premjesti.o ( .text* )
+        *?/arch?* ( * )
 	}
 	
 	.kernel 0x200000:
 	{
-        *?/kernel?* ( .text* )
+        *?/kernel?* ( * )
 	}
 	
 	.lib 0x300000:
 	{
-        *?/lib?* ( .text* )
+        *?/lib?* ( * )
 	}
 	
 	.api 0x400000:
 	{
-        *?/api?* ( .text* )
+        *?/api?* ( * )
 	}
 	
 	.programs 0x500000:
 	{
-        *?/programs?* ( .text* )
+        *?/programs?* ( * )
 	}
 
 	.stog 0x600000:
