@@ -1,5 +1,5 @@
 #include <types/basic.h>
-#include <stdio.h>
+//#include <stdio.h>
 void premjesti()
 {
 	extern size_t size_c;
@@ -12,7 +12,7 @@ void premjesti()
 	size_t size_data = (size_t) &size_b;
 	size_t i;
 
-	printf("Ovdje sam");
+	//printf("Ovdje sam");
 	// instructions
 	char *od = (char *) (0x100000 + size_code);
 	char *kamo = (char *)(0x200000);
