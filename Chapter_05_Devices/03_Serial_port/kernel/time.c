@@ -52,11 +52,11 @@ int k_time_init()
  * \param clockid Clock to use
  * \param time Pointer where to store time
  */
-int kclock_gettime(clockid_t clockid, timespec_t *time)
+int kclock_gettime(clockid_t clock_id, timespec_t *time)
 {
-	ASSERT(time && (clockid==CLOCK_REALTIME || clockid==CLOCK_MONOTONIC));
+	ASSERT(time && (clock_id==CLOCK_REALTIME || clock_id==CLOCK_MONOTONIC));
 
-	arch_get_time(time);
+	arch_get_time(clock_id, time);
 
 	return EXIT_SUCCESS;
 }
@@ -68,7 +68,7 @@ int kclock_gettime(clockid_t clockid, timespec_t *time)
  */
 int kclock_settime(clockid_t clockid, timespec_t *time)
 {
-	ASSERT(time && (clockid==CLOCK_REALTIME || clockid==CLOCK_MONOTONIC));
+	ASSERT(time && clockid==CLOCK_REALTIME);
 
 	arch_set_time(time);
 
@@ -277,77 +277,139 @@ int ktimer_gettime(ktimer_t *ktimer, itimerspec_t *value)
 static void ktimer_schedule()
 {
 	ktimer_t *first, *next;
-	timespec_t time, ref_time;
+	timespec_t time_realtime, ref_time_realtime;
+	timespec_t time_monolitic, ref_time_monolitic;
 
 	if (!sys__feature(FEATURE_TIMERS, FEATURE_GET, 0))
 		return;
 
-	kclock_gettime(CLOCK_REALTIME, &time);
+	kclock_gettime(CLOCK_REALTIME, &time_realtime);
 	/* should have separate "scheduler" for each clock */
 
-	ref_time = time;
-	time_add(&ref_time, &threshold);
+	ref_time_realtime = time_realtime;
+	time_add(&ref_time_realtime, &threshold);
+	ref_time_monolitic = time_monolitic;
+	time_add(&ref_time_monolitic, &threshold);
 	/* use "ref_time" instead of "time" when looking timers to activate */
 
 	/* should any timer be activated? */
 	first = list_get(&ktimers, FIRST);
 	while (first != NULL)
 	{
-		/* timers have absolute values in 'it_value' */
-		if (time_cmp(&first->itimer.it_value, &ref_time) <= 0)
-		{
-			/* 'activate' timer */
-
-			/* but first remove timer from list */
-			first = list_remove(&ktimers, FIRST, NULL);
-
-			/* and add to list if period is given */
-			if (TIME_IS_SET(&first->itimer.it_interval))
+		if(first->clockid == CLOCK_REALTIME){
+			/* timers have absolute values in 'it_value' */
+			if (time_cmp(&first->itimer.it_value, &ref_time_realtime) <= 0)
 			{
-				/* calculate next activation time */
-				time_add(&first->itimer.it_value,
-					   &first->itimer.it_interval);
-				/* put back into list */
-				list_sort_add(&ktimers, first,
-						&first->list, ktimer_cmp);
+				/* 'activate' timer */
+
+				/* but first remove timer from list */
+				first = list_remove(&ktimers, FIRST, NULL);
+
+				/* and add to list if period is given */
+				if (TIME_IS_SET(&first->itimer.it_interval))
+				{
+					/* calculate next activation time */
+					time_add(&first->itimer.it_value,
+						&first->itimer.it_interval);
+					/* put back into list */
+					list_sort_add(&ktimers, first,
+							&first->list, ktimer_cmp);
+				}
+				else {
+					TIMER_DISARM(first);
+				}
+
+				/* potential problem: if more timers activate at same
+				* time, first that activate might cause other timers to
+				* wait very LONG: in handler of that alarm we can
+				* enable interrupts and busy wait for some time to pass
+				* fix: set alarm right here for next timer in list
+				*/
+				next = list_get(&ktimers, FIRST);
+				if (next != NULL)
+				{
+					ref_time_realtime = next->itimer.it_value;
+					time_sub(&ref_time_realtime, &time_realtime);
+					arch_timer_set(&ref_time_realtime, ktimer_schedule);
+				}
+				/* evade this behaviour! */
+
+				ktimer_process_event(&first->evp);
+
+				/* processing may take some time! refresh "time" */
+				kclock_gettime(CLOCK_REALTIME, &time_realtime);
+				ref_time_realtime = time_realtime;
+				time_add(&ref_time_realtime, &threshold);
+
+				first = list_get(&ktimers, FIRST);
 			}
 			else {
-				TIMER_DISARM(first);
+				first = list_get(&ktimers, FIRST);
+				if (first)
+				{
+					ref_time_realtime = first->itimer.it_value;
+					time_sub(&ref_time_realtime, &time_realtime);
+					arch_timer_set(&ref_time_realtime, ktimer_schedule);
+				}
+				break;
 			}
-
-			/* potential problem: if more timers activate at same
-			 * time, first that activate might cause other timers to
-			 * wait very LONG: in handler of that alarm we can
-			 * enable interrupts and busy wait for some time to pass
-			 * fix: set alarm right here for next timer in list
-			 */
-			next = list_get(&ktimers, FIRST);
-			if (next != NULL)
+		}else if(first->clockid == CLOCK_MONOTONIC){
+			/* timers have absolute values in 'it_value' */
+			if (time_cmp(&first->itimer.it_value, &ref_time_monolitic) <= 0)
 			{
-				ref_time = next->itimer.it_value;
-				time_sub(&ref_time, &time);
-				arch_timer_set(&ref_time, ktimer_schedule);
+				/* 'activate' timer */
+
+				/* but first remove timer from list */
+				first = list_remove(&ktimers, FIRST, NULL);
+
+				/* and add to list if period is given */
+				if (TIME_IS_SET(&first->itimer.it_interval))
+				{
+					/* calculate next activation time */
+					time_add(&first->itimer.it_value,
+						&first->itimer.it_interval);
+					/* put back into list */
+					list_sort_add(&ktimers, first,
+							&first->list, ktimer_cmp);
+				}
+				else {
+					TIMER_DISARM(first);
+				}
+
+				/* potential problem: if more timers activate at same
+				* time, first that activate might cause other timers to
+				* wait very LONG: in handler of that alarm we can
+				* enable interrupts and busy wait for some time to pass
+				* fix: set alarm right here for next timer in list
+				*/
+				next = list_get(&ktimers, FIRST);
+				if (next != NULL)
+				{
+					ref_time_monolitic = next->itimer.it_value;
+					time_sub(&ref_time_monolitic, &time_monolitic);
+					arch_timer_set(&ref_time_monolitic, ktimer_schedule);
+				}
+				/* evade this behaviour! */
+
+				ktimer_process_event(&first->evp);
+
+				/* processing may take some time! refresh "time" */
+				kclock_gettime(CLOCK_REALTIME, &time_monolitic);
+				ref_time_monolitic = time_monolitic;
+				time_add(&ref_time_monolitic, &threshold);
+
+				first = list_get(&ktimers, FIRST);
 			}
-			/* evade this behaviour! */
-
-			ktimer_process_event(&first->evp);
-
-			/* processing may take some time! refresh "time" */
-			kclock_gettime(CLOCK_REALTIME, &time);
-			ref_time = time;
-			time_add(&ref_time, &threshold);
-
-			first = list_get(&ktimers, FIRST);
-		}
-		else {
-			first = list_get(&ktimers, FIRST);
-			if (first)
-			{
-				ref_time = first->itimer.it_value;
-				time_sub(&ref_time, &time);
-				arch_timer_set(&ref_time, ktimer_schedule);
+			else {
+				first = list_get(&ktimers, FIRST);
+				if (first)
+				{
+					ref_time_monolitic = first->itimer.it_value;
+					time_sub(&ref_time_monolitic, &time_monolitic);
+					arch_timer_set(&ref_time_monolitic, ktimer_schedule);
+				}
+				break;
 			}
-			break;
 		}
 	}
 }

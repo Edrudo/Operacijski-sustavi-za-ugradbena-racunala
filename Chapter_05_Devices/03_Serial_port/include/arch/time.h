@@ -19,7 +19,7 @@ void arch_timer_set(timespec_t *time, void *alarm_func);
  * Get 'current' system time
  * \param time Store address for current time
  */
-void arch_get_time(timespec_t *time);
+void arch_get_time(clockid_t clock_id, timespec_t *time);
 
 /*!
  * Set 'current' system time
