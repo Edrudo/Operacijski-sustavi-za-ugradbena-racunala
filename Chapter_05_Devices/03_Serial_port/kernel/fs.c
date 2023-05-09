@@ -250,7 +250,6 @@ int k_fs_read_write(descriptor_t *desc, void *buffer, size_t size, int op)
 		//and then replace fp+ bytes ... and then write block back
 
 		//char buf[ft->block_size];
-		size_t todo = size;
 		//size_t block = fd->fp / ft->block_size;
 		//size_t maxfilesize = ft->block_size * MAXFILEBLOCKS;
 
