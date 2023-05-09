@@ -192,6 +192,7 @@ int k_fs_read_write(descriptor_t *desc, void *buffer, size_t size, int op)
 	size_t block_start  = fd->fp / ft->block_size;
 	char buf[ft->block_size];
 
+	size_t todo = size;
 	if (op) {
 		//read from offset "fd->fp" to "buffer" "size" bytes
 
@@ -236,10 +237,11 @@ int k_fs_read_write(descriptor_t *desc, void *buffer, size_t size, int op)
 				//pomakni taman do kraja bloka, na offset 0
 				index_read += read;
 				block_offset = 0;
+				todo -= 1;
 		}
 		fd->fp += size;
 
-		return size;
+		return size - todo;
 	}
 	else {
 		//assume there is enough space on disk
@@ -276,6 +278,7 @@ int k_fs_read_write(descriptor_t *desc, void *buffer, size_t size, int op)
 												//na block[index zapisao] sprremi offbl
 												fd->tfd->block[indeks_bloka_w] = xx;
 												block = xx;
+												todo -= 1;
 												break;
 								}
 						}
@@ -293,7 +296,7 @@ int k_fs_read_write(descriptor_t *desc, void *buffer, size_t size, int op)
 		fd->tfd->size += size;
 		fd->fp += size;
 
-		return size;
+		return size - todo;
 	}
 
 	return 0;
