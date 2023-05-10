@@ -224,8 +224,8 @@ int k_fs_read_write(descriptor_t *desc, void *buffer, size_t size, int op)
 		size_t block_index = block_start;
 		size_t index_read = 0;
 		while(index_read < size){
-				//buffer je velik kolko i blok
-				//u buffer kopiraj blok sa "indeks_bloka"
+				//len(buffer) == len(block)
+				// buffer <- block[block_indeks]
 				DISK_READ(buf, 1, fd->tfd->block[block_start + block_index]);
 				block_index += 1;
 				size_t read = ft->block_size - block_offset;
@@ -234,7 +234,7 @@ int k_fs_read_write(descriptor_t *desc, void *buffer, size_t size, int op)
 						read = size - index_read;
 				}
 				memcpy(buffer+index_read, buf+block_offset, read);
-				//pomakni taman do kraja bloka, na offset 0
+				// move pointer to the end of the block
 				index_read += read;
 				block_offset = 0;
 				todo -= 1;
@@ -257,41 +257,40 @@ int k_fs_read_write(descriptor_t *desc, void *buffer, size_t size, int op)
 
 		fd->tfd->tm = t;
 		size_t maxfilesize = ft->block_size * MAXFILEBLOCKS;
-		int indeks_zapisao = 0;
-		size_t indeks_bloka_w = block_start;
+		int index_write = 0;
+		size_t block_index_w = block_start;
 		if(size + fd->fp > maxfilesize){
 					printf("[+]too big");
 					return 0;
 		}
-		while(indeks_zapisao < size){
-				size_t block = fd->tfd->block[indeks_bloka_w];
+		while(index_write < size){
+				size_t block = fd->tfd->block[block_index_w];
 				//write ...
 				//if ...->block[x] == 0 => find free block on disk
 				//when fp isn't block start, read block from disk first
 				//and then replace fp+ bytes ... and then write block back
-				//printf("[+] za slob blok\n");
 				if(block == 0){
 						int xx;
 						for(xx = ft_size; xx < ft->blocks; xx++){
 								if( ft->free[xx] ){
 												ft->free[xx] = 0;
-												//na block[index zapisao] sprremi offbl
-												fd->tfd->block[indeks_bloka_w] = xx;
+												// block[index_write] <-  offbl
+												fd->tfd->block[block_index_w] = xx;
 												block = xx;
 												todo -= 1;
 												break;
 								}
 						}
 				}
-				indeks_bloka_w++;
+				block_index_w++;
 				//pokupi sto treba zapisati u buff
 				DISK_READ(buf, 1, block);
 				size_t write = ft->block_size - block_offset;
-				memcpy(buf+block_offset, buffer+indeks_zapisao, write);
+				memcpy(buf+block_offset, buffer+index_write, write);
 				block_offset = 0;
 				//iz buffera zapisi  1 blok
 				DISK_WRITE(buf, 1, block);
-				indeks_zapisao += write;
+				index_write += write;
 		}
 		fd->tfd->size += size;
 		fd->fp += size;

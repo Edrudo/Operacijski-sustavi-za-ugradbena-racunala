@@ -61,10 +61,18 @@ void k_startup()
 
 	int fd = open("file:test", O_CREAT | O_WRONLY, 0);
 	kprintf("fd=%d\n", fd);
+	int fd1 = open("file:test1", O_CREAT | O_WRONLY, 0);
+	kprintf("fd1=%d\n", fd1);
+
 	int retval = write(fd, "neki tekst", 11);
 	kprintf("retval=%d\n", retval);
 	retval = close(fd);
 	kprintf("retval=%d\n", retval);
+	
+	int retval1 = write(fd1, "neki tekst1", 11);
+	kprintf("retval1=%d\n", retval1);
+	retval = close(fd1);
+	kprintf("retval1=%d\n", retval1);
 
 	fd = open("file:test", O_RDONLY, 0);
 	kprintf("fd=%d\n", fd);
@@ -72,6 +80,13 @@ void k_startup()
 	retval = read(fd, buff, 11);
 	kprintf("retval=%d\n", retval);
 	kprintf("buff=%s\n", buff);
+
+	fd1 = open("file:test1", O_RDONLY, 0);
+	kprintf("fd1=%d\n", fd1);
+	char buff1[11];
+	retval = read(fd1, buff1, 11);
+	kprintf("retval1=%d\n", retval1);
+	kprintf("buff1=%s\n", buff1);
 
 
 	/* start desired program(s) */
