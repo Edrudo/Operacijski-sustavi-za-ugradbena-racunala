@@ -69,7 +69,7 @@ void k_startup()
 	retval = close(fd);
 	kprintf("retval=%d\n", retval);
 	
-	int retval1 = write(fd1, "neki tekst1", 11);
+	int retval1 = write(fd1, "neki tekst1", 12);
 	kprintf("retval1=%d\n", retval1);
 	retval = close(fd1);
 	kprintf("retval1=%d\n", retval1);
