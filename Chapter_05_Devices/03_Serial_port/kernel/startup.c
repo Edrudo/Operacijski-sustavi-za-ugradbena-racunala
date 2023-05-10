@@ -88,7 +88,7 @@ void k_startup()
 	retval1 = read(fd1, buff1, 11);
 	kprintf("retval1=%d\n", retval1);
 	kprintf("buff1=%s\n", buff1);
-	retval1 = close(fd);
+	retval1 = close(fd1);
 
 
 	/* start desired program(s) */

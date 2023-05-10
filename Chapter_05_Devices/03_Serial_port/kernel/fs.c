@@ -280,12 +280,10 @@ int k_fs_read_write(descriptor_t *desc, void *buffer, size_t size, int op)
 						}
 				}
 				block_index_w++;
-				//pokupi sto treba zapisati u buff
 				DISK_READ(buf, 1, block);
 				size_t write = ft->block_size - block_offset;
 				memcpy(buf+block_offset, buffer+index_write, write);
 				block_offset = 0;
-				//iz buffera zapisi  1 blok
 				DISK_WRITE(buf, 1, block);
 				index_write += write;
 		}
