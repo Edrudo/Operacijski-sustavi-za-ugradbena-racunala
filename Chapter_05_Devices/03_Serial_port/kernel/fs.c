@@ -75,8 +75,8 @@ int k_fs_rename_file(char *old_file_name, char *new_file_name){
 	int i;
 		for (i = 0; i < ft->max_files; i++) {
 			if (strcmp(ft->fd[i].node_name, old_file_name) == 0) {
-				ft->fd[i].node_name = new_file_name;
-				break
+				strcpy(ft->fd[i].node_name, new_file_name);
+				break;
 			}
 		}
 }
