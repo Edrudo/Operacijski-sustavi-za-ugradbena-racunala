@@ -112,27 +112,27 @@ int timer ()
 	evp3.sigev_notify_attributes = NULL;
 
 	/* timer1 */
-	t1.it_interval.tv_sec = 1;
+	t1.it_interval.tv_sec = 20;
 	t1.it_interval.tv_nsec = 0;
-	t1.it_value.tv_sec = 20;
+	t1.it_value.tv_sec = 1;
 	t1.it_value.tv_nsec = 0;
 	evp1.sigev_value.sival_int = t1.it_interval.tv_sec;
 	timer_create ( CLOCK_REALTIME, &evp1, &timer1 );
 	timer_settime ( &timer1, 0, &t1, NULL );
 
 	// timer2 
-	t2.it_interval.tv_sec = 2;
+	t2.it_interval.tv_sec = 20;
 	t2.it_interval.tv_nsec = 0;
-	t2.it_value.tv_sec = 20;
+	t2.it_value.tv_sec = 2;
 	t2.it_value.tv_nsec = 0;
 	evp2.sigev_value.sival_int = t2.it_interval.tv_sec;
 	timer_create ( CLOCK_REALTIME, &evp2, &timer2 );
 	timer_settime ( &timer2, 0, &t2, NULL );
 	
 	// timer3
-	t3.it_interval.tv_sec = 5;
+	t3.it_interval.tv_sec = 20;
 	t3.it_interval.tv_nsec = 0;
-	t3.it_value.tv_sec = 20;
+	t3.it_value.tv_sec = 5;
 	t3.it_value.tv_nsec = 0;
 	evp3.sigev_value.sival_int = t3.it_interval.tv_sec;
 	timer_create ( CLOCK_MONOTONIC, &evp3, &timer3 );
