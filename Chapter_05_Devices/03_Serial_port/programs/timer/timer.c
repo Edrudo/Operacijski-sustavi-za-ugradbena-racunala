@@ -54,12 +54,32 @@ static void alarm_nt2 ( sigval_t param )
 	}
 }
 
+static void alarm_nt3 ( sigval_t param )
+{
+	timespec_t t_realtime;
+	timespec_t t_montonic;
+
+	clock_gettime ( CLOCK_REALTIME, &t_realtime );
+	clock_gettime ( CLOCK_MONOTONIC, &t_montonic );
+
+	timespec_t *t_realtime1;
+	if(t_realtime.tv_sec > t_montonic.tv_sec) {
+		t_realtime.tv_sec -= 10;
+		t_realtime1 = &t_realtime;
+		clock_settime(CLOCK_REALTIME, t_realtime1);
+	}else if(t_realtime.tv_sec < t_montonic.tv_sec){
+		t_realtime.tv_sec += 10;
+		t_realtime1 = &t_realtime;
+		clock_settime(CLOCK_REALTIME, t_realtime1);
+	}
+}
+
 int timer ()
 {
 	timespec_t t;
-	itimerspec_t t1, t2;
-	timer_t timer1, timer2;
-	sigevent_t evp1, evp2;
+	itimerspec_t t1, t2, t3;
+	timer_t timer1, timer2, timer3;
+	sigevent_t evp1, evp2, evp3;
 
 	printf ( "Example program: [%s:%s]\n%s\n\n", __FILE__, __FUNCTION__,
 		 timer_PROG_HELP );
@@ -76,9 +96,15 @@ int timer ()
 	evp2.sigev_notify_function = alarm_nt2;
 	evp2.sigev_notify_attributes = NULL;
 
+	evp3.sigev_notify = SIGEV_THREAD;
+	evp3.sigev_notify_function = alarm_nt3;
+	evp3.sigev_notify_attributes = NULL;
+
 	/* timer1 */
 	t1.it_interval.tv_sec = 1;
 	t1.it_interval.tv_nsec = 0;
+	t1.it_value.tv_sec = 30;
+	t1.it_value.tv_nsec = 0;
 	evp1.sigev_value.sival_int = t1.it_interval.tv_sec;
 	timer_create ( CLOCK_REALTIME, &evp1, &timer1 );
 	timer_settime ( &timer1, 0, &t1, NULL );
@@ -86,40 +112,35 @@ int timer ()
 	// timer2 
 	t2.it_interval.tv_sec = 2;
 	t2.it_interval.tv_nsec = 0;
-	t2.it_value.tv_sec = 10;
+	t2.it_value.tv_sec = 30;
 	t2.it_value.tv_nsec = 0;
-	evp1.sigev_value.sival_int = t2.it_interval.tv_sec;
+	evp2.sigev_value.sival_int = t2.it_interval.tv_sec;
 	timer_create ( CLOCK_REALTIME, &evp2, &timer2 );
 	timer_settime ( &timer2, 0, &t2, NULL );
+	
+	// timer3
+	t3.it_interval.tv_sec = 5;
+	t3.it_interval.tv_nsec = 0;
+	t3.it_value.tv_sec = 30;
+	t3.it_value.tv_nsec = 0;
+	evp3.sigev_value.sival_int = t3.it_interval.tv_sec;
+	timer_create ( CLOCK_MONOTONIC, &evp3, &timer3 );
+	timer_settime ( &timer3, 0, &t2, NULL );
 
-	t.tv_sec = 11;
-	t.tv_nsec = 0;
+	while (1)
+	{
+		// do nothing
+	}
+	
 
-	while ( TIME_IS_SET (&t) )
-		if ( clock_nanosleep ( CLOCK_REALTIME, 0, &t, &t ) )
-			printf ( "Interrupted sleep?\n" );
+	/* t.tv_sec = 11;
+	t.tv_nsec = 0; */
 
-	clock_gettime ( CLOCK_REALTIME, &t );
-	printf ( "System time: %d:%d\n", t.tv_sec, t.tv_nsec / 100000000 );
-
-	t.tv_sec = 3;
+	/* t.tv_sec = 3;
 	t.tv_nsec = 0;
 	clock_settime ( CLOCK_REALTIME, &t );
-	clock_gettime ( CLOCK_REALTIME, &t );
-	printf ( "System time: %d:%d\n", t.tv_sec, t.tv_nsec / 100000000 );
+	clock_gettime ( CLOCK_REALTIME, &t ); */
 
-	t.tv_sec = 11;
-	t.tv_nsec = 0;
-
-	while ( TIME_IS_SET (&t) )
-		if ( clock_nanosleep ( CLOCK_REALTIME, 0, &t, &t ) )
-			printf ( "Interrupted sleep?\n" );
-
-	clock_gettime ( CLOCK_REALTIME, &t );
-	printf ( "System time: %d:%d\n", t.tv_sec, t.tv_nsec / 100000000 );
-
-	timer_delete ( &timer1 );
-	timer_delete ( &timer2 );
 
 	return 0;
 }
