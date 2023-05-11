@@ -84,8 +84,8 @@ void k_startup()
 
 	fd1 = open("file:test1", O_RDONLY, 0);
 	kprintf("fd1=%d\n", fd1);
-	char buff1[11];
-	retval1 = read(fd1, buff1, 11);
+	char buff1[12];
+	retval1 = read(fd1, buff1, 12);
 	kprintf("retval1=%d\n", retval1);
 	kprintf("buff1=%s\n", buff1);
 	retval1 = close(fd1);
