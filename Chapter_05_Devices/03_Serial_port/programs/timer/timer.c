@@ -34,12 +34,32 @@ static void alarm_nt1 ( sigval_t param )
 		t_realtime.tv_sec, t_realtime.tv_nsec/100000000);
 }
 
+static void alarm_nt2 ( sigval_t param )
+{
+	timespec_t t_realtime;
+	timespec_t t_montonic;
+
+	clock_gettime ( CLOCK_REALTIME, &t_realtime );
+	clock_gettime ( CLOCK_MONOTONIC, &t_montonic );
+
+	timespec_t *t_realtime1;
+	if(t_realtime.tv_sec > t_montonic.tv_sec) {
+		t_realtime.tv_sec -= 1;
+		t_realtime1 = &t_realtime;
+		clock_settime(CLOCK_REALTIME, t_realtime1);
+	}else if(t_realtime.tv_sec < t_montonic.tv_sec){
+		t_realtime.tv_sec += 1;
+		t_realtime1 = &t_realtime;
+		clock_settime(CLOCK_REALTIME, t_realtime1);
+	}
+}
+
 int timer ()
 {
 	timespec_t t;
 	itimerspec_t t1, t2;
 	timer_t timer1, timer2;
-	sigevent_t evp;
+	sigevent_t evp1, evp2;
 
 	printf ( "Example program: [%s:%s]\n%s\n\n", __FILE__, __FUNCTION__,
 		 timer_PROG_HELP );
@@ -48,26 +68,28 @@ int timer ()
 	t0 = t;
 	printf ( "System time: %d:%d\n", t.tv_sec, t.tv_nsec/100000000 );
 
-	evp.sigev_notify = SIGEV_THREAD;
-	evp.sigev_notify_function = alarm_nt1;
-	evp.sigev_notify_attributes = NULL;
+	evp1.sigev_notify = SIGEV_THREAD;
+	evp1.sigev_notify_function = alarm_nt1;
+	evp1.sigev_notify_attributes = NULL;
+	
+	evp2.sigev_notify = SIGEV_THREAD;
+	evp2.sigev_notify_function = alarm_nt2;
+	evp2.sigev_notify_attributes = NULL;
 
 	/* timer1 */
 	t1.it_interval.tv_sec = 1;
 	t1.it_interval.tv_nsec = 0;
-	t1.it_value.tv_sec = 10;
-	t1.it_value.tv_nsec = 0;
-	evp.sigev_value.sival_int = t1.it_interval.tv_sec;
-	timer_create ( CLOCK_REALTIME, &evp, &timer1 );
+	evp1.sigev_value.sival_int = t1.it_interval.tv_sec;
+	timer_create ( CLOCK_REALTIME, &evp1, &timer1 );
 	timer_settime ( &timer1, 0, &t1, NULL );
 
 	// timer2 
-	t2.it_interval.tv_sec = 5;
+	t2.it_interval.tv_sec = 2;
 	t2.it_interval.tv_nsec = 0;
-	t2.it_value.tv_sec = 5;
+	t2.it_value.tv_sec = 10;
 	t2.it_value.tv_nsec = 0;
-	evp.sigev_value.sival_int = t2.it_interval.tv_sec;
-	timer_create ( CLOCK_MONOTONIC, &evp, &timer2 );
+	evp1.sigev_value.sival_int = t2.it_interval.tv_sec;
+	timer_create ( CLOCK_REALTIME, &evp1, &timer2 );
 	timer_settime ( &timer2, 0, &t2, NULL );
 
 	t.tv_sec = 11;
