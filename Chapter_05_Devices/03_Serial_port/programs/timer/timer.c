@@ -76,7 +76,7 @@ static void alarm_nt3 ( sigval_t param )
 
 int timer ()
 {
-	timespec_t t, tt;
+	timespec_t t;
 	itimerspec_t t1, t2, t3;
 	timer_t timer1, timer2, timer3;
 	sigevent_t evp1, evp2, evp3;
