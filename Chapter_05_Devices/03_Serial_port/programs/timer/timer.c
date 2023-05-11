@@ -106,7 +106,7 @@ int timer ()
 	/* timer1 */
 	t1.it_interval.tv_sec = 1;
 	t1.it_interval.tv_nsec = 0;
-	t1.it_value.tv_sec = 30;
+	t1.it_value.tv_sec = 1;
 	t1.it_value.tv_nsec = 0;
 	evp1.sigev_value.sival_int = t1.it_interval.tv_sec;
 	timer_create ( CLOCK_REALTIME, &evp1, &timer1 );
@@ -115,7 +115,7 @@ int timer ()
 	// timer2 
 	t2.it_interval.tv_sec = 2;
 	t2.it_interval.tv_nsec = 0;
-	t2.it_value.tv_sec = 30;
+	t2.it_value.tv_sec = 2;
 	t2.it_value.tv_nsec = 0;
 	evp2.sigev_value.sival_int = t2.it_interval.tv_sec;
 	timer_create ( CLOCK_REALTIME, &evp2, &timer2 );
@@ -124,7 +124,7 @@ int timer ()
 	// timer3
 	t3.it_interval.tv_sec = 5;
 	t3.it_interval.tv_nsec = 0;
-	t3.it_value.tv_sec = 30;
+	t3.it_value.tv_sec = 5;
 	t3.it_value.tv_nsec = 0;
 	evp3.sigev_value.sival_int = t3.it_interval.tv_sec;
 	timer_create ( CLOCK_MONOTONIC, &evp3, &timer3 );
@@ -133,7 +133,7 @@ int timer ()
 	while (TIME_IS_SET(&t))
 		if (clock_nanosleep(CLOCK_REALTIME, 0, &t, &t))
 			printf("Interrupted sleep?\n");
-			
+
 	/* t.tv_sec = 11;
 	t.tv_nsec = 0; */
 
