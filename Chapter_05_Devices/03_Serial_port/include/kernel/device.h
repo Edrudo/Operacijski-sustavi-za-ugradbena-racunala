@@ -11,3 +11,4 @@ int sys__write(descriptor_t *desc, void *buffer, size_t count);
 int sys__device_status(descriptor_t *desc, int flags);
 int sys__poll(struct pollfd fds[], nfds_t nfds, int timeout,
 	descriptor_t *std_desc);
+int sys_rename_file(char *old_file_name, char *new_file_name)

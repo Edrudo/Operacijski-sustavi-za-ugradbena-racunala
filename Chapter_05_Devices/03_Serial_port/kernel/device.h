@@ -53,3 +53,4 @@ int k_device_recv(void *data, size_t size, int flags, kdevice_t *kdev);
 
 int k_device_lock(kdevice_t *dev, int wait);
 int k_device_unlock(kdevice_t *dev);
+int k_device_rename_file(char *old_file_name, char *new_file_name);

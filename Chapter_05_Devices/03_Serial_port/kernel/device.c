@@ -63,6 +63,14 @@ kdevice_t *k_device_add(device_t *dev)
 	return kdev;
 }
 
+int sys_rename_file(char *old_file_name, char *new_file_name){
+	return k_fs_rename_file(old_file_name, new_file_name);
+}
+
+int k_device_rename_file(char *old_file_name, char *new_file_name){
+	return k_fs_rename_file(old_file_name, new_file_name);
+}
+
 /*! Initialize device (and call its initializer, if set) */
 int k_device_init(kdevice_t *kdev, int flags, void *params, void *callback)
 {
