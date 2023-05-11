@@ -92,10 +92,11 @@ int timer ()
 		 timer_PROG_HELP );
 
 	clock_gettime ( CLOCK_REALTIME, &t );
-	t0 = t;
+	t0_realtime = t;
 	printf ( "System real time: %d:%d\n", t.tv_sec, t.tv_nsec/100000000 );
 	
 	clock_gettime ( CLOCK_MONOTONIC, &t );
+	t0_monotonic = t;
 	printf ( "System monotonic time: %d:%d\n", t.tv_sec, t.tv_nsec/100000000 );
 
 	evp1.sigev_notify = SIGEV_THREAD;
