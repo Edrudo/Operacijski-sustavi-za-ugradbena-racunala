@@ -76,7 +76,7 @@ static void alarm_nt3 ( sigval_t param )
 
 int timer ()
 {
-	timespec_t t;
+	timespec_t t, tt;
 	itimerspec_t t1, t2, t3;
 	timer_t timer1, timer2, timer3;
 	sigevent_t evp1, evp2, evp3;
@@ -86,7 +86,10 @@ int timer ()
 
 	clock_gettime ( CLOCK_REALTIME, &t );
 	t0 = t;
-	printf ( "System time: %d:%d\n", t.tv_sec, t.tv_nsec/100000000 );
+	printf ( "System real time: %d:%d\n", t.tv_sec, t.tv_nsec/100000000 );
+	
+	clock_gettime ( CLOCK_MONOTONIC, &t );
+	printf ( "System monotonic time: %d:%d\n", t.tv_sec, t.tv_nsec/100000000 );
 
 	evp1.sigev_notify = SIGEV_THREAD;
 	evp1.sigev_notify_function = alarm_nt1;
