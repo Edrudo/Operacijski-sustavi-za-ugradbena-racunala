@@ -58,7 +58,7 @@ int timer ()
 	t1.it_value.tv_sec = 10;
 	t1.it_value.tv_nsec = 0;
 	evp.sigev_value.sival_int = t1.it_interval.tv_sec;
-	timer_create ( CLOCK_MONOTONIC, &evp, &timer1 );
+	timer_create ( CLOCK_REALTIME, &evp, &timer1 );
 	timer_settime ( &timer1, 0, &t1, NULL );
 
 	// timer2 
