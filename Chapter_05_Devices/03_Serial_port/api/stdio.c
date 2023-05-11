@@ -172,4 +172,5 @@ int poll(struct pollfd fds[], nfds_t nfds, int timeout)
 
 int rename(char *old_file_name, char *new_file_name){
 	k_fs_rename_file(old_file_name, new_file_name);
+	return 0;
 }

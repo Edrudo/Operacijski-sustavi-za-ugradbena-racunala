@@ -6,6 +6,7 @@ int k_fs_is_file_open(descriptor_t *desc);
 int k_fs_open_file(char *pathname, int flags, mode_t mode, descriptor_t *desc);
 int k_fs_close_file(descriptor_t *desc);
 int k_fs_read_write(descriptor_t *desc, void *buffer, size_t size, int op);
+int k_fs_rename_file(char *old_file_name, char *new_file_name);
 
 #ifdef _K_FS_C_
 
