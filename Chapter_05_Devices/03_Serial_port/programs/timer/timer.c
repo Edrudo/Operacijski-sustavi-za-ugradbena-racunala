@@ -53,7 +53,7 @@ int timer ()
 	evp.sigev_notify_attributes = NULL;
 
 	/* timer1 */
-	t1.it_interval.tv_sec = 1;
+	t1.it_interval.tv_sec = 10;
 	t1.it_interval.tv_nsec = 0;
 	t1.it_value.tv_sec = 1;
 	t1.it_value.tv_nsec = 0;
