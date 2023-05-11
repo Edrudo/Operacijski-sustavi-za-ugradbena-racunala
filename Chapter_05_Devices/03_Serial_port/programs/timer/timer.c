@@ -19,6 +19,23 @@ static void alarm_nt ( sigval_t param )
 		t.tv_sec, t.tv_nsec/100000000, num, num );
 }
 
+static void alarm_nt1 ( sigval_t param )
+{
+	int num;
+	timespec_t t_realtime;
+	timespec_t t_montonic;
+
+	num = param.sival_int;
+	clock_gettime ( CLOCK_REALTIME, &t_realtime );
+	clock_gettime ( CLOCK_MONOTONIC, &t_montonic );
+
+	printf ( "CLOCK_MONOTONIC: %d:%d\n",
+		t_montonic.tv_sec, t_montonic.tv_nsec/100000000);
+		
+	printf ( "CLOCK_REALTIME: %d:%d\n",
+		t_realtime.tv_sec, t_realtime.tv_nsec/100000000);
+}
+
 int timer ()
 {
 	timespec_t t;
@@ -34,26 +51,26 @@ int timer ()
 	printf ( "System time: %d:%d\n", t.tv_sec, t.tv_nsec/100000000 );
 
 	evp.sigev_notify = SIGEV_THREAD;
-	evp.sigev_notify_function = alarm_nt;
+	evp.sigev_notify_function = alarm_nt1;
 	evp.sigev_notify_attributes = NULL;
 
 	/* timer1 */
-	t1.it_interval.tv_sec = 3;
+	t1.it_interval.tv_sec = 1;
 	t1.it_interval.tv_nsec = 0;
-	t1.it_value.tv_sec = 3;
+	t1.it_value.tv_sec = 100;
 	t1.it_value.tv_nsec = 0;
 	evp.sigev_value.sival_int = t1.it_interval.tv_sec;
-	timer_create ( CLOCK_REALTIME, &evp, &timer1 );
+	timer_create ( CLOCK_MONOTONIC, &evp, &timer1 );
 	timer_settime ( &timer1, 0, &t1, NULL );
 
-	/* timer2 */
+	/* timer2 
 	t2.it_interval.tv_sec = 5;
 	t2.it_interval.tv_nsec = 0;
 	t2.it_value.tv_sec = 5;
 	t2.it_value.tv_nsec = 0;
 	evp.sigev_value.sival_int = t2.it_interval.tv_sec;
 	timer_create ( CLOCK_MONOTONIC, &evp, &timer2 );
-	timer_settime ( &timer2, 0, &t2, NULL );
+	timer_settime ( &timer2, 0, &t2, NULL );*/
 
 	t.tv_sec = 11;
 	t.tv_nsec = 0;
