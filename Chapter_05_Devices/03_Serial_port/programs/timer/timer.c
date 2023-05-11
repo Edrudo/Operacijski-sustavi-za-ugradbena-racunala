@@ -130,11 +130,6 @@ int timer ()
 	timer_create ( CLOCK_MONOTONIC, &evp3, &timer3 );
 	timer_settime ( &timer3, 0, &t2, NULL );
 
-	while (1)
-	{
-		// do nothing
-	}
-	
 
 	/* t.tv_sec = 11;
 	t.tv_nsec = 0; */
