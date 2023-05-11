@@ -79,6 +79,8 @@ int k_fs_rename_file(char *old_file_name, char *new_file_name){
 			break;
 		}
 	}
+
+	return 0;
 }
 
 int k_fs_open_file(char *pathname, int flags, mode_t mode, descriptor_t *desc)
