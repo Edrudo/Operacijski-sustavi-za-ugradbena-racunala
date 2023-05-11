@@ -6,7 +6,7 @@
 
 static timespec_t t0;
 
-static void alarm_nt ( sigval_t param )
+/* static void alarm_nt ( sigval_t param )
 {
 	int num;
 	timespec_t t;
@@ -17,15 +17,13 @@ static void alarm_nt ( sigval_t param )
 
 	printf ( "[%d:%d] Alarm %d (every %d seconds)\n",
 		t.tv_sec, t.tv_nsec/100000000, num, num );
-}
+} */
 
 static void alarm_nt1 ( sigval_t param )
 {
-	int num;
 	timespec_t t_realtime;
 	timespec_t t_montonic;
 
-	num = param.sival_int;
 	clock_gettime ( CLOCK_REALTIME, &t_realtime );
 	clock_gettime ( CLOCK_MONOTONIC, &t_montonic );
 
@@ -63,14 +61,14 @@ int timer ()
 	timer_create ( CLOCK_MONOTONIC, &evp, &timer1 );
 	timer_settime ( &timer1, 0, &t1, NULL );
 
-	/* timer2 
+	// timer2 
 	t2.it_interval.tv_sec = 5;
 	t2.it_interval.tv_nsec = 0;
 	t2.it_value.tv_sec = 5;
 	t2.it_value.tv_nsec = 0;
 	evp.sigev_value.sival_int = t2.it_interval.tv_sec;
 	timer_create ( CLOCK_MONOTONIC, &evp, &timer2 );
-	timer_settime ( &timer2, 0, &t2, NULL );*/
+	timer_settime ( &timer2, 0, &t2, NULL );
 
 	t.tv_sec = 11;
 	t.tv_nsec = 0;
