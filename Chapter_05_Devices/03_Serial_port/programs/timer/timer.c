@@ -4,7 +4,8 @@
 #include <time.h>
 #include <api/prog_info.h>
 
-static timespec_t t0;
+static timespec_t t0_realtime;
+static timespec_t t0_monotonic;
 
 /* static void alarm_nt ( sigval_t param )
 {
@@ -26,6 +27,8 @@ static void alarm_nt1 ( sigval_t param )
 
 	clock_gettime ( CLOCK_REALTIME, &t_realtime );
 	clock_gettime ( CLOCK_MONOTONIC, &t_montonic );
+	time_sub ( &t_realtime, &t0_realtime );
+	time_sub ( &t_montonic, &t0_monotonic );
 
 	printf ( "CLOCK_MONOTONIC: %d:%d\n",
 		t_montonic.tv_sec, t_montonic.tv_nsec/100000000);
@@ -41,6 +44,8 @@ static void alarm_nt2 ( sigval_t param )
 
 	clock_gettime ( CLOCK_REALTIME, &t_realtime );
 	clock_gettime ( CLOCK_MONOTONIC, &t_montonic );
+	time_sub ( &t_realtime, &t0_realtime );
+	time_sub ( &t_montonic, &t0_monotonic );
 
 	timespec_t *t_realtime1;
 	if(t_realtime.tv_sec > t_montonic.tv_sec) {
@@ -61,6 +66,8 @@ static void alarm_nt3 ( sigval_t param )
 
 	clock_gettime ( CLOCK_REALTIME, &t_realtime );
 	clock_gettime ( CLOCK_MONOTONIC, &t_montonic );
+	time_sub ( &t_realtime, &t0_realtime );
+	time_sub ( &t_montonic, &t0_monotonic );
 
 	timespec_t *t_realtime1;
 	if(t_realtime.tv_sec > t_montonic.tv_sec) {
